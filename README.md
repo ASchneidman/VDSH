@@ -48,7 +48,7 @@ python train_VDSH_SP.py -d [dataset name] -g [gpu number] -b [number of bits]
 }
 ```
 
-#10-405 Steps
+# 10-405 Steps
 
 - Download VDSH folder
 - Create directory datasets/darknet
