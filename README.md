@@ -48,3 +48,19 @@ python train_VDSH_SP.py -d [dataset name] -g [gpu number] -b [number of bits]
 }
 ```
 
+# 10-405 Steps
+## Training
+- Download VDSH folder
+- Create directory datasets/darknet
+- Place compiled csv in datasets/darknet, name it data.csv
+- Create directory dataset/darknet
+- Run python3 preprocess/create_single_label_dataset.py -d darknet
+- Run python3 preprocess/convert_tf_to_tfidf.py -d darknet
+- Run python3 train_VDSH.py -d darknet.tfidf
+
+## Visualizing
+- If cuda available, install t-sne cuda (OPTIONAL)
+ -- https://github.com/CannyLab/tsne-cuda/wiki/Installation
+- run python3 tsne_and_visualize.py -m <model_name>
+- note: <model_name> should be in directory trained_models/
+
