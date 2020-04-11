@@ -60,5 +60,5 @@ python train_VDSH_SP.py -d [dataset name] -g [gpu number] -b [number of bits]
 
 ## Visualizing
 - Install t-sne cuda
--- https://github.com/CannyLab/tsne-cuda/wiki/Installation
+ -- https://github.com/CannyLab/tsne-cuda/wiki/Installation
 
