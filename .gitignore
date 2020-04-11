@@ -1,0 +1,7 @@
+dataset/*
+.ipynb_checkpoints/
+.pyc
+__pycache__/*
+logs/*
+trained_models/*
+datasets/*
