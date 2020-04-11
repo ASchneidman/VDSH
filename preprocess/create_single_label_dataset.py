@@ -108,7 +108,9 @@ elif args.dataset == 'darknet':
     del temp
 
     # Split data 
+    np.random.seed(0)
     mask = np.random.rand(len(temp2)) < 0.8
+    np.random.seed()
 
     temp_train_df = temp2[mask]
     temp_test_df = temp2[~mask]

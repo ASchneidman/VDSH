@@ -18,7 +18,7 @@ def end():
 
     now = datetime.now()
 
-    torch.save(model.state_dict(), 'trained_models/' + model.get_name() + '_' + now.strftime("%d:%m:%Y_%H:%M") + '.model')
+    torch.save(model.state_dict(), 'trained_models/' + model.get_name() + '_' + now.strftime("%d:%m:%Y_%H:%M") + '.pth')
 
 ##################################################################################################
 
@@ -91,6 +91,7 @@ print("num train: {} num test: {}".format(len(train_set), len(test_set)))
 
 model = VDSH(dataset, num_features, num_bits, dropoutProb=0.1, device=device)
 model.to(device)
+model.train()
 
 num_epochs = args.num_epochs
 
