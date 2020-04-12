@@ -59,7 +59,9 @@ if args.download:
     print("Downloading")
     s3_client = boto3.client('s3')
     s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/test.tfidf.df.pkl', 'dataset/darknet/test.tfidf.df.pkl')
-    print("Done")
+    print("Done test")
+    s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/train.tfidf.df.pkl', 'dataset/darknet/train.tfidf.df.pkl')
+    print("Done train")
 
 dataset, data_fmt = args.dataset.split('.')
 
