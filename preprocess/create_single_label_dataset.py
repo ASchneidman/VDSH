@@ -8,7 +8,10 @@ from sklearn.utils import shuffle
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 #from nltk.stem import PorterStemmer
-from pathlib import Path
+from pyspark.sql.types import *
+from pyspark import SparkFiles
+from pyspark.context import SparkContext
+from pyspark.sql.session import SparkSession
 
 ##################################################################################################
 
@@ -98,22 +101,52 @@ elif args.dataset == 'yahooanswer':
     del df
 elif args.dataset == 'darknet':
     root_dir = os.path.join(home, 'datasets/darknet')
+    
+    SparkContext.setSystemProperty('spark.executor.memory', '8g')
+    sc = SparkContext("local", "App Name")
+    spark = SparkSession(sc)
 
+    schema = StructType([
+        StructField("market_name", StringType(), True),
+        StructField("vendor_name", StringType(), True),
+        StructField("price", StringType(), True),
+        StructField("item_name", StringType(), True),
+        StructField("ships_from", StringType(), True),
+        StructField("description", StringType(), True),
+        StructField("date", StringType(), True),
+        StructField("adjusted_price", StringType(), True)
+    ])
+
+    #chunks = []
+    print(sc._conf.getAll())
     all_fn = os.path.join(root_dir, 'data.csv')
-    df = pd.read_csv(all_fn, header=0)
-    temp = df.drop(columns=['market_name', 'vendor_name', 'price', 'ship_from', 'date'])
+    #for chunk in pd.read_csv(all_fn, header=None, error_bad_lines=False, chunksize=10000, usecols=[5], engine='python'):
+    #    chunks.append(chunk)
+    #    print(len(chunks))
+    #df = pd.concat(chunks)
+    #df = pd.read_csv(all_fn, error_bad_lines=False, usecols=[5], engine='python')
+    df = spark.read.csv(all_fn, multiLine=True,header=False, mode="DROPMALFORMED", schema=schema).toPandas()
+    print(df)
+    sys.exit(0)
+    '''
+    ONLY USED IF THERE IS A HEADER
+    print("finished loading csv, dropping cols")
+    temp = df.drop(columns=['market_name', 'vendor_name', 'price', 'ship_from', 'date', 'adjusted_price'])
     del df
+    print("finished dropping cols, renaming cols")
     temp2 = temp.rename(columns={'description': 'body', 'name': 'title'})
     temp2['label'] = 1
     del temp
-
+    print('finished renaming cols, generating train and test data')
+    '''
+    
     # Split data 
-    np.random.seed(0)
-    mask = np.random.rand(len(temp2)) < 0.8
-    np.random.seed()
+    mask = np.random.rand(len(df)) < 0.8
 
-    temp_train_df = temp2[mask]
-    temp_test_df = temp2[~mask]
+    temp_train_df = df[mask]
+    temp_test_df = df[~mask]
+
+    del df
 
     train_docs = list(temp_train_df.body)
     train_tags = list(temp_train_df.label - 1)
@@ -121,7 +154,6 @@ elif args.dataset == 'darknet':
     test_docs = list(temp_test_df.body)
     test_tags = list(temp_test_df.label - 1)
 
-    del temp2
     del temp_train_df
     del temp_test_df
 

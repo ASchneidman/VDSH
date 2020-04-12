@@ -35,15 +35,13 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 dataset, data_fmt = args.dataset.split('.')
 
-train_set = SingleLabelTextDataset('dataset/{}'.format(dataset), subset='train', bow_format=data_fmt, download=True)
 test_set = SingleLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
 
-train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=args.train_batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=1, shuffle=True)
 
-y_dim = train_set.num_classes()
+y_dim = test_set.num_classes()
 num_bits = args.nbits
-num_features = train_set[0][0].size(0)
+num_features = test_set[0][0].size(0)
 
 # load model
 model = VDSH(None, num_features, num_bits, dropoutProb=0.1, device=device)
