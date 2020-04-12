@@ -6,9 +6,11 @@ import torch
 import pandas as pd
 import pickle
 from torch.utils.data import Dataset
+from pyspark.sql import SparkSession
+from pyspark.sql import SQLContext
 
 ##########################################################################################################################
-
+    
 class SingleLabelTextDataset(Dataset):
     """datasets wrapper for ng20, agnews, dbpedia, yahooanswer"""
 

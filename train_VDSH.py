@@ -8,6 +8,8 @@ from utils import *
 from models.VDSH import VDSH
 import argparse
 from datetime import datetime
+import boto3
+import botocore
 
 def end():
     with open('logs/VDSH/result.txt', 'a') as handle:
@@ -32,6 +34,7 @@ parser.add_argument("--test_batch_size", default=100, type=int)
 parser.add_argument("--transform_batch_size", default=100, type=int)
 parser.add_argument("--num_epochs", default=30, type=int)
 parser.add_argument("--lr", default=0.001, type=float)
+parser.add_argument("--download", help="1 to download from s3 bucket", type=int, default=0)
 
 args = parser.parse_args()
 
@@ -52,6 +55,12 @@ print(device)
 
 #########################################################################################################
 
+if args.download:
+    print("Downloading")
+    s3_client = boto3.client('s3')
+    s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/test.tfidf.df.pkl', 'dataset/darknet/test.tfidf.df.pkl')
+    print("Done")
+
 dataset, data_fmt = args.dataset.split('.')
 
 if dataset in ['reuters', 'tmc', 'rcv1']:
@@ -66,6 +75,7 @@ else:
     train_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='train', bow_format=data_fmt, download=True)
     test_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
 
+
 train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=args.train_batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=args.test_batch_size, shuffle=True)
 
@@ -74,7 +84,7 @@ y_dim = train_set.num_classes()
 num_bits = args.nbits
 num_features = train_set[0][0].size(0)
 
-print("Train VDSH-S model ...")
+print("Train VDSH model ...")
 print("dataset: {}".format(args.dataset))
 print("numbits: {}".format(args.nbits))
 print("gpu id:  {}".format(args.gpunum))

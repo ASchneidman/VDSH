@@ -102,6 +102,7 @@ elif args.dataset == 'yahooanswer':
 elif args.dataset == 'darknet':
     root_dir = os.path.join(home, 'datasets/darknet')
     
+    '''
     SparkContext.setSystemProperty('spark.executor.memory', '8g')
     sc = SparkContext("local", "App Name")
     spark = SparkSession(sc)
@@ -128,7 +129,6 @@ elif args.dataset == 'darknet':
     df = spark.read.csv(all_fn, multiLine=True,header=False, mode="DROPMALFORMED", schema=schema).toPandas()
     print(df)
     sys.exit(0)
-    '''
     ONLY USED IF THERE IS A HEADER
     print("finished loading csv, dropping cols")
     temp = df.drop(columns=['market_name', 'vendor_name', 'price', 'ship_from', 'date', 'adjusted_price'])
@@ -139,7 +139,11 @@ elif args.dataset == 'darknet':
     del temp
     print('finished renaming cols, generating train and test data')
     '''
-    
+
+
+    df = pd.read_pickle(root_dir + '/all_appended.pkl')
+    df = df.rename(columns={'description': 'body'})
+    df['label'] = 1
     # Split data 
     mask = np.random.rand(len(df)) < 0.8
 
