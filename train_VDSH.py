@@ -77,6 +77,7 @@ else:
     train_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='train', bow_format=data_fmt, download=True)
     test_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
 
+print(train_set.df)
 
 train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=args.train_batch_size, shuffle=True)
 test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=args.test_batch_size, shuffle=True)
@@ -107,7 +108,7 @@ model.train()
 
 num_epochs = args.num_epochs
 
-optimizer = optim.Adam(model.parameters(), lr=args.lr)
+optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-5,amsgrad=True)
 kl_weight = 0.
 kl_step = 1 / 5000.
 
