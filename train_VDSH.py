@@ -107,7 +107,8 @@ model.train()
 num_epochs = args.num_epochs
 
 optimizer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=1e-5,amsgrad=True)
-kl_weight = 0.
+#kl_weight = 0.
+kl_weight = 0.1
 kl_step = 1 / 5000.
 
 if not os.path.isdir('logs'):
