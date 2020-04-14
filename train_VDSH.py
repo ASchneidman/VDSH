@@ -58,8 +58,8 @@ print(device)
 if args.download:
     print("Downloading")
     s3_client = boto3.client('s3')
-    s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/test.tf.df.pkl', 'dataset/darknet/test.tf.df.pkl')
-    print("Done test")
+    #s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/test.tf.df.pkl', 'dataset/darknet/test.tf.df.pkl')
+    #print("Done test")
     s3_client.download_file('15405finalprojectcsvdata', 'pickled_split_data/train.tf.df.pkl', 'dataset/darknet/train.tf.df.pkl')
     print("Done train")
 
@@ -72,13 +72,13 @@ else:
         
 if single_label_flag:
     train_set = SingleLabelTextDataset('dataset/{}'.format(dataset), subset='train', bow_format=data_fmt, download=True)
-    test_set = SingleLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
+    #test_set = SingleLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
 else:
     train_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='train', bow_format=data_fmt, download=True)
     test_set = MultiLabelTextDataset('dataset/{}'.format(dataset), subset='test', bow_format=data_fmt, download=True)
 
 train_loader = torch.utils.data.DataLoader(dataset=train_set, batch_size=args.train_batch_size, shuffle=True)
-test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=args.test_batch_size, shuffle=True)
+#test_loader = torch.utils.data.DataLoader(dataset=test_set, batch_size=args.test_batch_size, shuffle=True)
 
 #########################################################################################################
 y_dim = train_set.num_classes()
@@ -96,7 +96,7 @@ else:
     print("multi-label prediction.")
 print("num epochs: {}".format(args.num_epochs))
 print("learning rate: {}".format(args.lr))
-print("num train: {} num test: {}".format(len(train_set), len(test_set)))
+#print("num train: {} num test: {}".format(len(train_set), len(test_set)))
 
 #########################################################################################################
 
